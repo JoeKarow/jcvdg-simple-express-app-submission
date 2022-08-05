@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import axios from '../utils/axiosClient'
 import { Container, SimpleGrid, ActionIcon, Text } from '@mantine/core'
+import { randomId } from '@mantine/hooks'
 import Image from 'next/image'
 import { apiBooks } from '../utils/ssrQueries'
 
@@ -8,22 +9,21 @@ const url = 'http://localhost:3000/api/books'
 
 const Home = (props) => {
 	const [books, setBooks] = useState(props.bookList)
-	console.log(props)
 	const displayBooks = () => {
 		if (props.ssrError) return <Text>Something went wrong!</Text>
 		const bookList = books
-		console.log(bookList)
+		// console.log(bookList)
 		return bookList.map((book, i) => (
-			<div key={book['primary-isbn13']}>
+			<div key={randomId()}>
 				<Image
-					src={book['book_image']}
+					src={book.book_image}
 					alt={book.title}
 					width={175}
 					height={265}
 				/>
 				<div>{book.title}</div>
 				<div>{book.author}</div>
-				<ActionIcon onClick={() => handleClick(book['primary_isbn13'])}>
+				<ActionIcon onClick={() => handleClick(book.primary_isbn13)}>
 					<svg
 						xmlns='http://www.w3.org/2000/svg'
 						className='icon icon-tabler icon-tabler-heart'
@@ -101,10 +101,12 @@ const Home = (props) => {
 export const getServerSideProps = async () => {
 	try {
 		// const { data, status } = await axios.get('/api/books')
+		console.time('main page SSR query')
 		const data = await apiBooks()
+		console.timeEnd('main page SSR query')
 		return {
 			props: {
-				bookList: data.data,
+				bookList: JSON.parse(JSON.stringify(data.data)), // serialize data - _id type is ObjectID, but needs to be passed as a string
 			},
 		}
 	} catch (error) {
