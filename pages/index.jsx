@@ -14,7 +14,12 @@ const Home = (props) => {
 		console.log(bookList)
 		return bookList.map((book, i) => (
 			<div key={book['primary-isbn13']}>
-				<Image src={book['book_image']} alt={book.title} width={175} />
+				<Image
+					src={book['book_image']}
+					alt={book.title}
+					width={175}
+					height={265}
+				/>
 				<div>{book.title}</div>
 				<div>{book.author}</div>
 				<ActionIcon onClick={() => handleClick(book['primary_isbn13'])}>
