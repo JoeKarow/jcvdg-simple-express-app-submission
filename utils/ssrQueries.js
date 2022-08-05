@@ -1,10 +1,12 @@
 import axios from './axiosClient'
 import Book from '../models/Book'
+import dbConnect from './dbConnect'
 export const apiBooks = async () => {
 	try {
 		const url = `https://api.nytimes.com/svc/books/v3/lists//hardcover-fiction?api-key=${process.env.NYT_API}`
 		const booksData = await axios.get(url)
 		if (booksData.status !== 200) throw 'NYTimes Fetch error'
+		await dbConnect()
 		const books = booksData.data.results.books
 		// process results w/ the DB
 		for (let i = 0; i < books.length; i++) {
