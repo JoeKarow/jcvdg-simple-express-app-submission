@@ -3,7 +3,7 @@ import axios from 'axios'
 const baseURL = () => {
 	if (process.env.NODE_ENV === 'development')
 		return `http://localhost:${process.env.PORT || 3000}`
-	return process.env.VERCEL_URL
+	return process.env.NEXT_PUBLIC_VERCEL_URL
 }
 
 const axiosClient = axios.create({
