@@ -11,7 +11,12 @@ const handler = async (req, res) => {
 	// create book
 	if (method === 'POST') {
 		try {
-			const newBook = await new Book(req.body).save()
+			// const newBook = await new Book( req.body ).save()
+			const newBook = await Book.findOneAndUpdate(
+				{ isbn: req.body.isbn },
+				{ book: req.body.book },
+				{ new: true, upsert: true }
+			)
 			res
 				.status(201)
 				.json({ data: newBook, message: 'Book added successfully!' })
@@ -27,13 +32,13 @@ const handler = async (req, res) => {
 			const booksData = await axios.get(url)
 			if (booksData.status !== 200) throw 'NYTimes Fetch error'
 			const books = booksData.data.results.books
-      const inDB = await Book.find();
+			const inDB = await Book.find()
 			// cross reference books from NYT list with db book list, and tag as added=true
-      books.forEach( book => {
-        inDB.forEach( dbBook => {
-            if (dbBook.isbn === book['primary_isbn13']) book.added=true;
-        })
-      })
+			books.forEach((book) => {
+				inDB.forEach((dbBook) => {
+					if (dbBook.isbn === book['primary_isbn13']) book.added = true
+				})
+			})
 			res.status(200).json({ data: books })
 		} catch (error) {
 			res.status(500).json({ message: `internal server error: ${error}` })
