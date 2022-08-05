@@ -2,6 +2,7 @@ import { useState, useRef } from 'react'
 import axios from '../utils/axiosClient'
 import { Container, SimpleGrid, ActionIcon, Text } from '@mantine/core'
 import Image from 'next/image'
+import { apiBooks } from '../utils/ssrQueries'
 
 const url = 'http://localhost:3000/api/books'
 
@@ -99,7 +100,8 @@ const Home = (props) => {
 
 export const getServerSideProps = async () => {
 	try {
-		const { data, status } = await axios.get('/api/books')
+		// const { data, status } = await axios.get('/api/books')
+		const data = await apiBooks()
 		return {
 			props: {
 				bookList: data.data,
