@@ -1,7 +1,7 @@
 import Book from '../../../models/Book';
 import dbConnect from '../../../utils/dbConnect';
 
-export default async(req,res) => {
+const handler = async(req,res) => {
   const { method } = req;
   const { id } = req.query;
   
@@ -22,3 +22,4 @@ export default async(req,res) => {
     }
   }
 }
+export default handler

@@ -1,7 +1,7 @@
 import Book from '../../../models/Book';
 import dbConnect from '../../../utils/dbConnect';
 
-export default async (req, res) => {
+const handler = async (req, res) => {
   const { method } = req;
   
   // connect to database
@@ -18,3 +18,4 @@ export default async (req, res) => {
     }
   }
 }
+export default handler
