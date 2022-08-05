@@ -8,14 +8,13 @@ export const apiBooks = async () => {
 		if (booksData.status !== 200) throw 'NYTimes Fetch error'
 		await dbConnect()
 		const books = booksData.data.results.books
-		// process results w/ the DB
-		for (let i = 0; i < books.length; i++) {
-			const book = books[i]
-			const inDB = await Book.find({ isbn: String(book['primary_isbn13']) })
-			if (inDB.length > 0) {
-				book.added = true
-			}
-		}
+		const inDB = await Book.find();
+			// cross reference books from NYT list with db book list, and tag as added=true
+      books.forEach( book => {
+        inDB.forEach( dbBook => {
+            if (dbBook.isbn === book['primary_isbn13']) book.added=true;
+        })
+      })
 		return { data: books }
 	} catch (error) {
 		console.log(error)
